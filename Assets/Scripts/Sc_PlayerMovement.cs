@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -30,7 +31,21 @@ public class Sc_PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+        RotatePlayer();
         SpeedControl();
+    }
+
+    private void RotatePlayer()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit))
+        {
+            Vector3 dotherotate = new Vector3(raycastHit.point.x, transform.transform.position.y, raycastHit.point.z);
+            //transform.rotation = Quaternion.Euler(new Vector3(0, dotherotate.y, 0));
+            transform.LookAt(dotherotate);
+            //transform.Rotate(new Vector3(0,dotherotate.y,0));
+        }
+       // transform.rotation=Quaternion.Euler(0,0,0); 
     }
 
     private void GetInput()
@@ -41,7 +56,7 @@ public class Sc_PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        moveDir=orientation.forward*vertInput+orientation.right*horizInput;
+        moveDir=Vector3.forward*vertInput+Vector3.right*horizInput;
         if (useAddForce)
         {
             rb.AddForce(moveDir.normalized * speed);

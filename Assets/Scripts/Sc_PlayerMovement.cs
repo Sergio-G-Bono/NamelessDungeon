@@ -142,7 +142,7 @@ public class Sc_PlayerMovement : MonoBehaviour
     //}
     private void Move()
     {
-        cc.Move(currentMovement*Time.deltaTime*speed);
+        cc.SimpleMove(currentMovement*1*speed);
     }
     private void HandleAnimations()
     {

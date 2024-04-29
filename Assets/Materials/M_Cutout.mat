@@ -110,6 +110,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_22cc168347ca4e8da5f472902116f0b0_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7185775589075834bae03a55fb840399, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecularColorMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -274,7 +278,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.77651733, g: 0.7488, b: 0.8, a: 1}
+    - _Color: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
     - _CutoutPos: {r: 0.5, g: 0.25, b: 0, a: 0}
     - _CutoutPosition: {r: 0.5, g: 0.43, b: 0, a: 0}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}

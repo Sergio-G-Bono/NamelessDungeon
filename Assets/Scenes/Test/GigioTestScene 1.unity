@@ -14095,7 +14095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce35372250ec4e44b70ff66a3feba48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationFactorPerFrame: 20
+  cam: {fileID: 14879207}
   useAddForce: 0
   speed: 5
   orientation: {fileID: 0}
@@ -15259,7 +15259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce35372250ec4e44b70ff66a3feba48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationFactorPerFrame: 1
+  cam: {fileID: 0}
   useAddForce: 0
   speed: 20
   orientation: {fileID: 2006921633}

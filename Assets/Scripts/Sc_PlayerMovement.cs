@@ -5,16 +5,18 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class Sc_PlayerMovement : MonoBehaviour
 {
 
+	[SerializeField] private Camera cam;
 	IA_Input inputClass;
 	Vector2 currentMovementInput;
 	Vector3 currentMovement;
 	bool isMovPressed;
 	CharacterController cc;
 	Animator animator;
-	[SerializeField] float rotationFactorPerFrame = 1.0f;
+	float rotationFactorPerFrame = 1.0f;
 
 	[SerializeField] private bool useAddForce = false;
 	[SerializeField] private float speed;
@@ -80,20 +82,36 @@ public class Sc_PlayerMovement : MonoBehaviour
 
 	private void RotatePlayer()
 	{
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		if (Physics.Raycast(ray, out RaycastHit raycastHit))
-		{
-			Vector3 dotherotate = new Vector3(raycastHit.point.x, transform.transform.position.y, raycastHit.point.z);
-			Quaternion currentRot = transform.rotation;
+		//Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		//if (Physics.Raycast(ray, out RaycastHit raycastHit))
+		//{
+		//	Vector3 dotherotate = new Vector3(raycastHit.point.x, transform.transform.position.y, raycastHit.point.z);
+		//	Quaternion currentRot = transform.rotation;
 
-			//Debug.Log(transform.forward);
-			transform.LookAt(dotherotate);
-			//transform.Rotate(new Vector3(0,dotherotate.y,0));
-		}
-	}
+		//	//Debug.Log(transform.forward);
+		//	transform.LookAt(dotherotate);
+		//	//transform.Rotate(new Vector3(0,dotherotate.y,0));
+		//}
+
+        // normalise input direction
+        Vector3 inputDirection = new Vector3(currentMovementInput.x, 0.0f, currentMovementInput.y).normalized;
+
+        // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+        // if there is a move input rotate player when the player is moving
+        if (currentMovementInput != Vector2.zero)
+        {
+           float _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +cam.transform.eulerAngles.y;
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref rotationFactorPerFrame,.1f);
+
+            // rotate to face input direction relative to camera position
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        }
 
 
-	private void Move()
+    }
+
+
+    private void Move()
 	{
 		//Debug.Log(currentMovement);
 		var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, -45, 0));

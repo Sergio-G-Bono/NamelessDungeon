@@ -54,7 +54,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColor:
-        m_Texture: {fileID: 2800000, guid: d6a15f7a9c0ff9a4c940dba6cf90ca58, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5dd11d8655afe9a4e909111537b93f21, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emissive:
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: 3650ce47670903c4fbf7544459ac34d5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 00e95353a9a195d4a9dfb55eddd05a21, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Orm:

@@ -44,6 +44,15 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PointMouseMov"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9e44182-2a17-491e-9125-f1d495e0307d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -57,61 +66,6 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""136d18a5-65be-4f63-8cb6-7d685845482e"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""39e25736-9ffc-4674-8232-fe55928421d0"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""42536b83-e66d-47a7-b85d-5121514d00c8"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""a45bbd11-48a0-496c-9262-659bf5ba00b3"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""e7b4e435-b09c-4661-8c15-3c112480e657"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -134,6 +88,17 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1d2f4104-d6a8-496b-9288-070430376896"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PointMouseMov"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -144,6 +109,7 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
         m_AM_CharControl = asset.FindActionMap("AM_CharControl", throwIfNotFound: true);
         m_AM_CharControl_Move = m_AM_CharControl.FindAction("Move", throwIfNotFound: true);
         m_AM_CharControl_Run = m_AM_CharControl.FindAction("Run", throwIfNotFound: true);
+        m_AM_CharControl_PointMouseMov = m_AM_CharControl.FindAction("PointMouseMov", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,12 +173,14 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
     private List<IAM_CharControlActions> m_AM_CharControlActionsCallbackInterfaces = new List<IAM_CharControlActions>();
     private readonly InputAction m_AM_CharControl_Move;
     private readonly InputAction m_AM_CharControl_Run;
+    private readonly InputAction m_AM_CharControl_PointMouseMov;
     public struct AM_CharControlActions
     {
         private @IA_Input m_Wrapper;
         public AM_CharControlActions(@IA_Input wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_AM_CharControl_Move;
         public InputAction @Run => m_Wrapper.m_AM_CharControl_Run;
+        public InputAction @PointMouseMov => m_Wrapper.m_AM_CharControl_PointMouseMov;
         public InputActionMap Get() { return m_Wrapper.m_AM_CharControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -228,6 +196,9 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
+            @PointMouseMov.started += instance.OnPointMouseMov;
+            @PointMouseMov.performed += instance.OnPointMouseMov;
+            @PointMouseMov.canceled += instance.OnPointMouseMov;
         }
 
         private void UnregisterCallbacks(IAM_CharControlActions instance)
@@ -238,6 +209,9 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
+            @PointMouseMov.started -= instance.OnPointMouseMov;
+            @PointMouseMov.performed -= instance.OnPointMouseMov;
+            @PointMouseMov.canceled -= instance.OnPointMouseMov;
         }
 
         public void RemoveCallbacks(IAM_CharControlActions instance)
@@ -259,5 +233,6 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnPointMouseMov(InputAction.CallbackContext context);
     }
 }

@@ -19,6 +19,7 @@ public class Sc_PlayerMovement : MonoBehaviour
 
 	[SerializeField] private bool useAddForce = false;
 	[SerializeField] private float speed;
+	[SerializeField] private float smoothRotValue = .1f;
 	[SerializeField] private Transform orientation;
 
 	private float horizInput;
@@ -27,11 +28,11 @@ public class Sc_PlayerMovement : MonoBehaviour
 	private Vector3 moveDir;
 
 	private Rigidbody rb;
-	private bool isMousePointing=false;
+	private bool isMousePointing = false;
 	private Vector2 mousePointPos;
-	private bool isPadConnected=false;
+	private bool isPadConnected = false;
 
-    private void Awake()
+	private void Awake()
 	{
 		inputClass = new IA_Input();
 		cc = GetComponent<CharacterController>();
@@ -52,69 +53,69 @@ public class Sc_PlayerMovement : MonoBehaviour
 		};
 
 		//mouse control
-        inputClass.AM_CharControl.PointMouseMov.canceled += ctx =>
-        {
-            OnMovementTargetInpuReleased(ctx);
-        };
+		inputClass.AM_CharControl.PointMouseMov.canceled += ctx =>
+		{
+			OnMovementTargetInpuReleased(ctx);
+		};
 
-        inputClass.AM_CharControl.PointMouseMov.performed += ctx =>
-        {
-            OnMovementTargetInput(ctx);
-        };
+		inputClass.AM_CharControl.PointMouseMov.performed += ctx =>
+		{
+			OnMovementTargetInput(ctx);
+		};
 
-		InputSystem.onDeviceChange += (device, change) => 
+		InputSystem.onDeviceChange += (device, change) =>
 		{
 			DeviceChange(device, change);
-	    };
+		};
 
 		//checks gamepad
-		if (Gamepad.current.name!="")
+		if (Gamepad.current != null)
 		{
 			isPadConnected = true;
 		}
 
-    }
+	}
 
-    private void DeviceChange(InputDevice device, InputDeviceChange change)
-    {
-        switch (change)
-        {
-            case InputDeviceChange.Added:
+	private void DeviceChange(InputDevice device, InputDeviceChange change)
+	{
+		switch (change)
+		{
+			case InputDeviceChange.Added:
 				// New Device.
 				Debug.Log("Added");
 				isPadConnected = true;
-                break;
-            case InputDeviceChange.Disconnected:
-                // Device got unplugged.
-                Debug.Log("disconnected");
+				break;
+			case InputDeviceChange.Disconnected:
+				// Device got unplugged.
+				Debug.Log("disconnected");
 				isPadConnected = false;
-                break;
-            //case InputDeviceChange.Reconnected://was connected obsolete?
-            //    // Plugged back in.
-            //    Debug.Log("Reconnected");
-            //    break;
-            //case InputDeviceChange.Removed:
-            //    // Remove from Input System entirely; by default, Devices stay in the system once discovered.
-            //    Debug.Log("Removed");
-            //    break;
-            default:
-                // See InputDeviceChange reference for other event types.
-                break;
-        }
-    }
+				break;
+			//case InputDeviceChange.Reconnected://was connected obsolete?
+			//    // Plugged back in.
+			//    Debug.Log("Reconnected");
+			//    break;
+			//case InputDeviceChange.Removed:
+			//    // Remove from Input System entirely; by default, Devices stay in the system once discovered.
+			//    Debug.Log("Removed");
+			//    break;
+			default:
+				// See InputDeviceChange reference for other event types.
+				break;
+		}
+	}
 
 
-    private void OnMovementTargetInpuReleased(InputAction.CallbackContext ctx)
-    {
-        isMousePointing = false;
-    }
+	private void OnMovementTargetInpuReleased(InputAction.CallbackContext ctx)
+	{
+		isMousePointing = false;
+	}
 
-    private void OnMovementTargetInput(InputAction.CallbackContext ctx)
-    {
+	private void OnMovementTargetInput(InputAction.CallbackContext ctx)
+	{
 		isMousePointing = true;
-    }
+	}
 
-    private void OnEnable()
+	private void OnEnable()
 	{
 		inputClass.Enable();
 	}
@@ -131,51 +132,58 @@ public class Sc_PlayerMovement : MonoBehaviour
 		HandleAnimations();
 	}
 
-    private void OnMovementInput(InputAction.CallbackContext ctx)
+	private void OnMovementInput(InputAction.CallbackContext ctx)
 	{
 		//Debug.Log(Input.GetJoystickNames().Length+" "+ Input.GetJoystickNames()[0].ToString());
 		if (isPadConnected)
 		{
-            currentMovementInput = ctx.ReadValue<Vector2>();
-            currentMovement.x = currentMovementInput.x;
-            currentMovement.z = currentMovementInput.y;
+			currentMovementInput = ctx.ReadValue<Vector2>();
+			currentMovement.x = currentMovementInput.x;
+			currentMovement.z = currentMovementInput.y;
 
-            isMovPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
-        }
-		
+			isMovPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
+		}
+
 	}
 
 	private void RotatePlayer()
 	{
-		if (isMousePointing && !isPadConnected)//&& Input.GetJoystickNames().Length<1
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit raycastHit))
-            {
-                Vector3 dotherotate = new Vector3(raycastHit.point.x, transform.transform.position.y, raycastHit.point.z);
-
-                transform.LookAt(dotherotate);
-            }
-        }else
+		if (isMousePointing && !isPadConnected)
 		{
-            // normalise input direction
-            Vector3 inputDirection = new Vector3(currentMovementInput.x, 0.0f, currentMovementInput.y).normalized;
+			Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+			if (Physics.Raycast(ray, out RaycastHit raycastHit))
+			{
+				Vector3 dotherotate = new Vector3(raycastHit.point.x, transform.transform.position.y, raycastHit.point.z);
+				//transform.LookAt(dotherotate);
 
-            // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-            // if there is a move input rotate player when the player is moving
-            if (currentMovementInput != Vector2.zero)
-            {
-                float _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref rotationFactorPerFrame, .1f);
+				var targetRotation = Quaternion.LookRotation(dotherotate - transform.position);
 
-                // rotate to face input direction relative to camera position
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            }
-        }
-    }
+				// Smoothly rotate towards the target point.
+				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, smoothRotValue );
 
 
-    private void Move()
+			}
+		}
+		else
+		{
+			// normalise input direction
+			Vector3 inputDirection = new Vector3(currentMovementInput.x, 0.0f, currentMovementInput.y).normalized;
+
+			// note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+			// if there is a move input rotate player when the player is moving
+			if (currentMovementInput != Vector2.zero)
+			{
+				float _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+				float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref rotationFactorPerFrame, smoothRotValue);
+
+				// rotate to face input direction relative to camera position
+				transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+			}
+		}
+	}
+
+
+	private void Move()
 	{
 		//Debug.Log(currentMovement);
 		var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, -45, 0));

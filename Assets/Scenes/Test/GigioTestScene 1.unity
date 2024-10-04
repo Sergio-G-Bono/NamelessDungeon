@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 261.80212, g: 324.32928, b: 429.2493, a: 1}
+  m_IndirectSpecularColor: {r: 262.38358, g: 325.10843, b: 430.30963, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -186,7 +186,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 37.23
+  field of view: 70.00001
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -211,8 +211,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14879205}
-  m_LocalRotation: {x: -0.10199934, y: 0.893745, z: -0.2526272, w: -0.35636446}
-  m_LocalPosition: {x: 1.902513, y: 6.03241, z: 1.9819279}
+  m_LocalRotation: {x: 0.26239592, y: -0.36692443, z: 0.108687945, w: 0.885834}
+  m_LocalPosition: {x: 7.1, y: 12.693, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14098,6 +14098,10 @@ MonoBehaviour:
   cam: {fileID: 14879207}
   useAddForce: 0
   speed: 5
+  minSpeed: 2
+  maxSpeed: 5
+  minMovementDistanceFromPlayer: 1
+  slowMovementDistanceFromPlayer: 3
   smoothRotValue: 0.1
   orientation: {fileID: 0}
 --- !u!143 &1805781473
@@ -15263,6 +15267,10 @@ MonoBehaviour:
   cam: {fileID: 0}
   useAddForce: 0
   speed: 20
+  minSpeed: 0
+  maxSpeed: 0
+  minMovementDistanceFromPlayer: 1
+  slowMovementDistanceFromPlayer: 8
   smoothRotValue: 0.5
   orientation: {fileID: 2006921633}
 --- !u!136 &2006921630

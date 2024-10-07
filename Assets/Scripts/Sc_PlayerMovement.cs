@@ -8,35 +8,36 @@ using UnityEngine.InputSystem;
 
 public class Sc_PlayerMovement : MonoBehaviour
 {
+    [Header("Controller")]
     [SerializeField] private Camera cam;
-    IA_Input inputClass;
-    Vector2 currentMovementInput;
-    Vector3 currentMovement;
-    bool isMovPressed;
-    CharacterController cc;
-    Animator animator;
-    float rotationFactorPerFrame = 1.0f;
-
     [SerializeField] private bool useAddForce = false;
-    [SerializeField] private float speed;
+    private CharacterController cc;
+    private Animator animator;
+    float rotationFactorPerFrame = 1.0f;
+    private bool isMousePointing = false;
+
+    [Header("Movement")]
+    [SerializeField] private float currentSpeed;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float minMovementDistanceFromPlayer = 1f;
     [SerializeField] private float slowMovementDistanceFromPlayer = 8f;
-    //   [SerializeField] private float fastMovementDistanceFromPlayer = 1f;
     [SerializeField] private float smoothRotValue = .1f;
-    [SerializeField] private Transform orientation;
-
-    private float horizInput;
-    private float vertInput;
-
-    private Vector3 moveDir;
-
-    private Rigidbody rb;
-    private bool isMousePointing = false;
-    private Vector2 mousePointPos;
-    private bool isPadConnected = false;
     private float distanceFromTarget;
+
+    /// <summary>
+    /// Input
+    /// </summary>
+    private IA_Input inputClass;
+    private Vector2 currentMovementInput;
+    private Vector3 currentMovement;
+    private bool isMovPressed;
+    private bool isPadConnected = false;
+
+    /// <summary>
+    /// Animator constant strings
+    /// </summary>
+    private const string APdistance = "APdistance";
 
     private void Awake()
     {
@@ -114,9 +115,8 @@ public class Sc_PlayerMovement : MonoBehaviour
     private void OnMovementTargetInpuReleased(InputAction.CallbackContext ctx)
     {
         isMousePointing = false;
-        animator.SetFloat("Speed", 0f);
-        animator.SetBool("isWalking", false);
-        animator.SetBool("isRunning", false);
+        distanceFromTarget = 0f;
+        animator.SetFloat(APdistance, distanceFromTarget);
     }
 
     private void OnMovementTargetInput(InputAction.CallbackContext ctx)
@@ -138,7 +138,7 @@ public class Sc_PlayerMovement : MonoBehaviour
     {
         RotatePlayer();
         Move();
-        HandleAnimations();
+      //  HandleAnimations();
     }
 
     private void OnMovementInput(InputAction.CallbackContext ctx)
@@ -195,34 +195,28 @@ public class Sc_PlayerMovement : MonoBehaviour
     {
         if (isMousePointing && !isPadConnected)
         {
+            animator.SetFloat(APdistance, distanceFromTarget);
+
             if (distanceFromTarget > minMovementDistanceFromPlayer)
             {
                 Debug.Log(distanceFromTarget);
                 if (distanceFromTarget > slowMovementDistanceFromPlayer)
                 {
-                    speed = maxSpeed;
-                    Debug.Log("fdfdsfsfsf");
-                    animator.SetFloat("Speed", .6f);
-                    animator.SetBool("isWalking", false);
-                    animator.SetBool("isRunning", true);
+                    currentSpeed = maxSpeed;
                 }
                 else if (distanceFromTarget > minMovementDistanceFromPlayer)
                 {
-                    speed = minSpeed;
-                    animator.SetFloat("Speed", .4f);
-                    animator.SetBool("isRunning", false);
-                    animator.SetBool("isWalking", true);
+                    currentSpeed = minSpeed;
                 }
-
-
-                cc.SimpleMove(transform.forward * 1 * speed);
+                cc.SimpleMove(transform.forward * 1 * currentSpeed);
             }
+           
         }
         else
         {
             var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, -45, 0));
             var skewedInput = matrix.MultiplyPoint3x4(currentMovement);
-            cc.SimpleMove(skewedInput * 1 * speed);
+            cc.SimpleMove(skewedInput * 1 * currentSpeed);
         }
 
     }

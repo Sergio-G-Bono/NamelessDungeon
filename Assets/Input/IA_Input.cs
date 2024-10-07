@@ -61,7 +61,7 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
                     ""id"": ""569b7185-1edc-4852-b048-0d6f4b8a490e"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": ""NormalizeVector2"",
+                    ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Move"",
                     ""isComposite"": false,

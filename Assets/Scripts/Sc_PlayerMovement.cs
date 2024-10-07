@@ -20,10 +20,11 @@ public class Sc_PlayerMovement : MonoBehaviour
     [SerializeField] private float currentSpeed;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float minMovementDistanceFromPlayer = 1f;
-    [SerializeField] private float slowMovementDistanceFromPlayer = 8f;
+    [SerializeField] private float walkMovementDistanceFromPlayer = 1f;
+    [SerializeField] private float runMovementDistanceFromPlayer = 8f;
     [SerializeField] private float smoothRotValue = .1f;
     private float distanceFromTarget;
+    private float analogMagnitude;
 
     /// <summary>
     /// Input
@@ -138,14 +139,28 @@ public class Sc_PlayerMovement : MonoBehaviour
     {
         RotatePlayer();
         Move();
-      //  HandleAnimations();
+        //  HandleAnimations();
     }
 
     private void OnMovementInput(InputAction.CallbackContext ctx)
     {
         if (isPadConnected)
         {
-            currentMovementInput = ctx.ReadValue<Vector2>();
+            Vector2 value = ctx.ReadValue<Vector2>();
+            if (value.magnitude <= 1f)
+            {
+                animator.SetFloat(APdistance, 0);
+            }
+
+            //calculate magnitude
+            float x = Mathf.Abs(value.x);
+            float y = Mathf.Abs(value.y);
+            float xSq = x * x;
+            float ySq = y * y;
+            analogMagnitude = Mathf.Sqrt(xSq + ySq);
+            //
+
+            currentMovementInput = value.normalized;
             currentMovement.x = currentMovementInput.x;
             currentMovement.z = currentMovementInput.y;
 
@@ -195,25 +210,43 @@ public class Sc_PlayerMovement : MonoBehaviour
     {
         if (isMousePointing && !isPadConnected)
         {
-            animator.SetFloat(APdistance, distanceFromTarget);
-
-            if (distanceFromTarget > minMovementDistanceFromPlayer)
+            if (distanceFromTarget < walkMovementDistanceFromPlayer)
             {
-                Debug.Log(distanceFromTarget);
-                if (distanceFromTarget > slowMovementDistanceFromPlayer)
-                {
-                    currentSpeed = maxSpeed;
-                }
-                else if (distanceFromTarget > minMovementDistanceFromPlayer)
-                {
-                    currentSpeed = minSpeed;
-                }
-                cc.SimpleMove(transform.forward * 1 * currentSpeed);
+                animator.SetFloat(APdistance, 0);
+                return;
             }
-           
+
+            if (distanceFromTarget > runMovementDistanceFromPlayer)
+            {
+                currentSpeed = maxSpeed;
+                animator.SetFloat(APdistance, 2);
+            }
+            else if (distanceFromTarget > walkMovementDistanceFromPlayer)
+            {
+                currentSpeed = minSpeed;
+                animator.SetFloat(APdistance, 1);
+            }
+            cc.SimpleMove(transform.forward * 1 * currentSpeed);
         }
         else
         {
+            if (analogMagnitude < .1f)
+            {
+                animator.SetFloat(APdistance, 0);
+                return;
+            }
+
+            if (analogMagnitude > .5f)
+            {
+                currentSpeed = maxSpeed;
+                animator.SetFloat(APdistance, 2);
+            }
+            else if (analogMagnitude > .1f)
+            {
+                currentSpeed = minSpeed;
+                animator.SetFloat(APdistance, 1);
+            }
+
             var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, -45, 0));
             var skewedInput = matrix.MultiplyPoint3x4(currentMovement);
             cc.SimpleMove(skewedInput * 1 * currentSpeed);
@@ -226,10 +259,10 @@ public class Sc_PlayerMovement : MonoBehaviour
         bool isWalking = animator.GetBool("isWalking");
         bool isRunning = animator.GetBool("isRunning");
 
-        if (isMousePointing && !isPadConnected && distanceFromTarget > minMovementDistanceFromPlayer)
+        if (isMousePointing && !isPadConnected && distanceFromTarget > walkMovementDistanceFromPlayer)
         {
 
-           // animator.SetBool("isWalking", true);
+            // animator.SetBool("isWalking", true);
         }
         else
         {

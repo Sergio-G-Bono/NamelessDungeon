@@ -5,6 +5,20 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[System.Serializable]
+struct ST_MovementTresholds
+{
+    [SerializeField] public float mouseMinMov;
+    [SerializeField] public float mouseMaxMov;                      
+    [SerializeField] public float controllerMinMov;
+    [SerializeField] public float controllerMaxMov;
+}
+struct ST_AnimState
+{
+    public const int idle=0;
+    public const int walk = 1;
+    public const int run = 2;
+}
 
 public class Sc_PlayerMovement : MonoBehaviour
 {
@@ -23,6 +37,7 @@ public class Sc_PlayerMovement : MonoBehaviour
     [SerializeField] private float walkMovementDistanceFromPlayer = 1f;
     [SerializeField] private float runMovementDistanceFromPlayer = 8f;
     [SerializeField] private float smoothRotValue = .1f;
+    [SerializeField] private ST_MovementTresholds moveTreshold;
     private float distanceFromTarget;
     private float analogMagnitude;
 
@@ -210,41 +225,41 @@ public class Sc_PlayerMovement : MonoBehaviour
     {
         if (isMousePointing && !isPadConnected)
         {
-            if (distanceFromTarget < walkMovementDistanceFromPlayer)
+            if (distanceFromTarget < moveTreshold.mouseMinMov)
             {
-                animator.SetFloat(APdistance, 0);
+                animator.SetInteger(APdistance, ST_AnimState.idle);
                 return;
             }
 
-            if (distanceFromTarget > runMovementDistanceFromPlayer)
+            if (distanceFromTarget > moveTreshold.mouseMaxMov)
             {
                 currentSpeed = maxSpeed;
-                animator.SetFloat(APdistance, 2);
+                animator.SetInteger(APdistance, ST_AnimState.run);
             }
-            else if (distanceFromTarget > walkMovementDistanceFromPlayer)
+            else if (distanceFromTarget > moveTreshold.mouseMinMov)
             {
                 currentSpeed = minSpeed;
-                animator.SetFloat(APdistance, 1);
+                animator.SetInteger(APdistance, ST_AnimState.walk);
             }
             cc.SimpleMove(transform.forward * 1 * currentSpeed);
         }
         else
         {
-            if (analogMagnitude < .1f)
+            if (analogMagnitude < moveTreshold.controllerMinMov)
             {
-                animator.SetFloat(APdistance, 0);
+                animator.SetInteger(APdistance, ST_AnimState.idle);
                 return;
             }
 
-            if (analogMagnitude > .5f)
+            if (analogMagnitude > moveTreshold.controllerMaxMov)
             {
                 currentSpeed = maxSpeed;
-                animator.SetFloat(APdistance, 2);
+                animator.SetInteger(APdistance, ST_AnimState.run);
             }
-            else if (analogMagnitude > .1f)
+            else if (analogMagnitude > moveTreshold.controllerMinMov)
             {
                 currentSpeed = minSpeed;
-                animator.SetFloat(APdistance, 1);
+                animator.SetInteger(APdistance, ST_AnimState.walk);
             }
 
             var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, -45, 0));

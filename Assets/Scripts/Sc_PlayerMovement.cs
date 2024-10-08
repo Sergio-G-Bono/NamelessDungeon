@@ -9,13 +9,13 @@ using UnityEngine.InputSystem;
 struct ST_MovementTresholds
 {
     [SerializeField] public float mouseMinMov;
-    [SerializeField] public float mouseMaxMov;                      
+    [SerializeField] public float mouseMaxMov;
     [SerializeField] public float controllerMinMov;
     [SerializeField] public float controllerMaxMov;
 }
 struct ST_AnimState
 {
-    public const int idle=0;
+    public const int idle = 0;
     public const int walk = 1;
     public const int run = 2;
 }
@@ -53,7 +53,9 @@ public class Sc_PlayerMovement : MonoBehaviour
     /// <summary>
     /// Animator constant strings
     /// </summary>
-    private const string APdistance = "APdistance";
+    private const string APmovementMagnitude = "APmagnitude";
+
+    #region MONOBEHAVIOUR METHODS
 
     private void Awake()
     {
@@ -61,7 +63,8 @@ public class Sc_PlayerMovement : MonoBehaviour
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
 
-        //controller
+        #region CONTROLLER ACTION
+
         inputClass.AM_CharControl.Move.started += ctx =>
         {
             OnMovementInput(ctx);
@@ -74,8 +77,10 @@ public class Sc_PlayerMovement : MonoBehaviour
         {
             OnMovementInput(ctx);
         };
+        #endregion
 
-        //mouse control
+        #region MOUSE ACTION
+
         inputClass.AM_CharControl.PointMouseMov.canceled += ctx =>
         {
             OnMovementTargetInpuReleased(ctx);
@@ -85,61 +90,22 @@ public class Sc_PlayerMovement : MonoBehaviour
         {
             OnMovementTargetInput(ctx);
         };
+        #endregion
+
+        #region OTHER ACTIONS
 
         InputSystem.onDeviceChange += (device, change) =>
         {
-            DeviceChange(device, change);
+            DeviceChange(change);
         };
+        #endregion
 
         //checks gamepad
         if (Gamepad.current != null)
         {
             isPadConnected = true;
         }
-
     }
-
-    private void DeviceChange(InputDevice device, InputDeviceChange change)
-    {
-        switch (change)
-        {
-            case InputDeviceChange.Added:
-                // New Device.
-                Debug.Log("Added");
-                isPadConnected = true;
-                break;
-            case InputDeviceChange.Disconnected:
-                // Device got unplugged.
-                Debug.Log("disconnected");
-                isPadConnected = false;
-                break;
-            //case InputDeviceChange.Reconnected://was connected obsolete?
-            //    // Plugged back in.
-            //    Debug.Log("Reconnected");
-            //    break;
-            //case InputDeviceChange.Removed:
-            //    // Remove from Input System entirely; by default, Devices stay in the system once discovered.
-            //    Debug.Log("Removed");
-            //    break;
-            default:
-                // See InputDeviceChange reference for other event types.
-                break;
-        }
-    }
-
-
-    private void OnMovementTargetInpuReleased(InputAction.CallbackContext ctx)
-    {
-        isMousePointing = false;
-        distanceFromTarget = 0f;
-        animator.SetFloat(APdistance, distanceFromTarget);
-    }
-
-    private void OnMovementTargetInput(InputAction.CallbackContext ctx)
-    {
-        isMousePointing = true;
-    }
-
     private void OnEnable()
     {
         inputClass.Enable();
@@ -149,14 +115,17 @@ public class Sc_PlayerMovement : MonoBehaviour
         inputClass.Disable();
     }
 
-
     private void Update()
     {
         RotatePlayer();
         Move();
-        //  HandleAnimations();
     }
 
+    #endregion
+
+    #region INPUT EVENTS
+
+    //controller 
     private void OnMovementInput(InputAction.CallbackContext ctx)
     {
         if (isPadConnected)
@@ -164,7 +133,7 @@ public class Sc_PlayerMovement : MonoBehaviour
             Vector2 value = ctx.ReadValue<Vector2>();
             if (value.magnitude <= 1f)
             {
-                animator.SetFloat(APdistance, 0);
+                animator.SetFloat(APmovementMagnitude, 0);
             }
 
             //calculate magnitude
@@ -181,9 +150,24 @@ public class Sc_PlayerMovement : MonoBehaviour
 
             isMovPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
         }
-
+    }
+    
+    //mouse
+    private void OnMovementTargetInpuReleased(InputAction.CallbackContext ctx)
+    {
+        isMousePointing = false;
+        distanceFromTarget = 0f;
+        animator.SetFloat(APmovementMagnitude, distanceFromTarget);
     }
 
+    private void OnMovementTargetInput(InputAction.CallbackContext ctx)
+    {
+        isMousePointing = true;
+    }
+    //
+    #endregion
+
+    #region MOVEMENT 
     private void RotatePlayer()
     {
         if (isMousePointing && !isPadConnected)
@@ -220,26 +204,25 @@ public class Sc_PlayerMovement : MonoBehaviour
         }
     }
 
-
     private void Move()
     {
         if (isMousePointing && !isPadConnected)
         {
             if (distanceFromTarget < moveTreshold.mouseMinMov)
             {
-                animator.SetInteger(APdistance, ST_AnimState.idle);
+                animator.SetInteger(APmovementMagnitude, ST_AnimState.idle);
                 return;
             }
 
             if (distanceFromTarget > moveTreshold.mouseMaxMov)
             {
                 currentSpeed = maxSpeed;
-                animator.SetInteger(APdistance, ST_AnimState.run);
+                animator.SetInteger(APmovementMagnitude, ST_AnimState.run);
             }
             else if (distanceFromTarget > moveTreshold.mouseMinMov)
             {
                 currentSpeed = minSpeed;
-                animator.SetInteger(APdistance, ST_AnimState.walk);
+                animator.SetInteger(APmovementMagnitude, ST_AnimState.walk);
             }
             cc.SimpleMove(transform.forward * 1 * currentSpeed);
         }
@@ -247,66 +230,48 @@ public class Sc_PlayerMovement : MonoBehaviour
         {
             if (analogMagnitude < moveTreshold.controllerMinMov)
             {
-                animator.SetInteger(APdistance, ST_AnimState.idle);
+                animator.SetInteger(APmovementMagnitude, ST_AnimState.idle);
                 return;
             }
 
             if (analogMagnitude > moveTreshold.controllerMaxMov)
             {
                 currentSpeed = maxSpeed;
-                animator.SetInteger(APdistance, ST_AnimState.run);
+                animator.SetInteger(APmovementMagnitude, ST_AnimState.run);
             }
             else if (analogMagnitude > moveTreshold.controllerMinMov)
             {
                 currentSpeed = minSpeed;
-                animator.SetInteger(APdistance, ST_AnimState.walk);
+                animator.SetInteger(APmovementMagnitude, ST_AnimState.walk);
             }
 
             var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, -45, 0));
             var skewedInput = matrix.MultiplyPoint3x4(currentMovement);
             cc.SimpleMove(skewedInput * 1 * currentSpeed);
         }
-
     }
+    #endregion
 
-    private void HandleAnimations()
+    #region UTILITY 
+    private void DeviceChange(InputDeviceChange change)
     {
-        bool isWalking = animator.GetBool("isWalking");
-        bool isRunning = animator.GetBool("isRunning");
-
-        if (isMousePointing && !isPadConnected && distanceFromTarget > walkMovementDistanceFromPlayer)
+        switch (change)
         {
-
-            // animator.SetBool("isWalking", true);
-        }
-        else
-        {
-            if (isMovPressed && !isWalking)
-            {
-                animator.SetBool("isWalking", true);
-            }
-
-            if (!isMovPressed && isWalking)
-            {
-                animator.SetBool("isWalking", false);
-                currentMovement = Vector3.zero;
-            }
-        }
-
-    }
-    private void HandleRotation()
-    {
-        Vector3 posToLookAt;
-        posToLookAt.x = currentMovement.x;
-        posToLookAt.y = 0;
-        posToLookAt.z = currentMovement.z;
-
-        Quaternion currentRot = transform.rotation;
-        if (isMovPressed)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(posToLookAt);
-            Quaternion.Slerp(currentRot, targetRot, rotationFactorPerFrame);
+            case InputDeviceChange.Added:
+                // New Device.
+                Debug.Log("Added");
+                isPadConnected = true;
+                break;
+            case InputDeviceChange.Disconnected:
+                // Device got unplugged.
+                Debug.Log("disconnected");
+                isPadConnected = false;
+                break;
+            default:
+                // See InputDeviceChange reference for other event types.
+                break;
         }
     }
+    #endregion
 
 }

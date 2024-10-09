@@ -49,11 +49,19 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - BaseColor:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Alpha:
         m_Texture: {fileID: 2800000, guid: 02709f5b421e6cb4e947a1821c7891d5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseColor:
+        m_Texture: {fileID: 2800000, guid: 668e2cb0b25c29d4b9e9e289ba91f208, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseColorTexture:
         m_Texture: {fileID: 2800000, guid: 668e2cb0b25c29d4b9e9e289ba91f208, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -133,6 +141,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - BaseColor: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor_1: {r: 0, g: 0, b: 0, a: 0}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}

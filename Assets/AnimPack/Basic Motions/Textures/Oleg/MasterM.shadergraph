@@ -23,6 +23,9 @@
         },
         {
             "m_Id": "7f92eb92960441938f92a682fe92eb40"
+        },
+        {
+            "m_Id": "4c6266c7d3154118b53a141bbb839f0d"
         }
     ],
     "m_Keywords": [],
@@ -575,7 +578,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
     "m_ObjectId": "098ac63f953d40e49a243a94731adb2d",
     "m_Id": 0,
-    "m_DisplayName": "BaseColor",
+    "m_DisplayName": "BaseColorTexture",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1287,6 +1290,36 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 3,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
+    "m_ObjectId": "4c6266c7d3154118b53a141bbb839f0d",
+    "m_Guid": {
+        "m_GuidSerialized": "0e9ce19d-7dee-42b2-ba97-6452218f8874"
+    },
+    "m_Name": "BaseColor",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "BaseColor",
+    "m_DefaultReferenceName": "_BaseColor",
+    "m_OverrideReferenceName": "_BaseColor",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 0.0
+    },
+    "isMainColor": false,
+    "m_ColorMode": 0
 }
 
 {
@@ -2212,11 +2245,11 @@
     "m_Guid": {
         "m_GuidSerialized": "95b6175f-8007-47fa-aedc-52e8688fcc72"
     },
-    "m_Name": "BaseColor",
+    "m_Name": "BaseColorTexture",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "BaseColor",
-    "m_DefaultReferenceName": "_BaseColor",
-    "m_OverrideReferenceName": "",
+    "m_RefNameGeneratedByDisplayName": "BaseColorTexture",
+    "m_DefaultReferenceName": "_BaseColorTexture",
+    "m_OverrideReferenceName": "_BaseColorTexture",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -2386,6 +2419,9 @@
         },
         {
             "m_Id": "7f92eb92960441938f92a682fe92eb40"
+        },
+        {
+            "m_Id": "4c6266c7d3154118b53a141bbb839f0d"
         }
     ]
 }

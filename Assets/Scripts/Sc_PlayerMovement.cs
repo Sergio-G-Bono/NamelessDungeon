@@ -173,6 +173,9 @@ public class Sc_PlayerMovement : MonoBehaviour
         if (isMousePointing && !isPadConnected)
         {
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Vector2 v = Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue());
+         //   Debug.Log(Vector2.Distance(new Vector2(.5f, .5f), v));
+            //  Debug.Log(Camera.main.ScreenToViewportPoint(Mouse.current.position.ReadValue()));
             if (Physics.Raycast(ray, out RaycastHit raycastHit))
             {
                 Vector3 dotherotate = new Vector3(raycastHit.point.x, transform.transform.position.y, raycastHit.point.z);
@@ -182,8 +185,8 @@ public class Sc_PlayerMovement : MonoBehaviour
 
                 // Smoothly rotate towards the target point.
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, smoothRotValue);
-
-                distanceFromTarget = Vector2.Distance(transform.position, dotherotate);
+                distanceFromTarget = Vector2.Distance(new Vector2(.5f, .5f), v);
+                Debug.Log(Vector2.Distance(new Vector2(.5f,.5f), v));
             }
         }
         else

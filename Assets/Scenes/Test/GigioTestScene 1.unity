@@ -211,8 +211,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14879205}
-  m_LocalRotation: {x: 0.28258717, y: -0.00996235, z: 0.0007624924, w: 0.95918965}
-  m_LocalPosition: {x: 4.1297493, y: -195.4331, z: -9.889553}
+  m_LocalRotation: {x: 0.107984036, y: -0.8893655, z: 0.26763695, w: 0.35459694}
+  m_LocalPosition: {x: 1.902513, y: 6.03241, z: 1.9819279}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14104,8 +14104,8 @@ MonoBehaviour:
   runMovementDistanceFromPlayer: 8
   smoothRotValue: 0.1
   moveTreshold:
-    mouseMinMov: 1
-    mouseMaxMov: 8
+    mouseMinMov: 0.1
+    mouseMaxMov: 0.2
     controllerMinMov: 0.1
     controllerMaxMov: 0.5
 --- !u!143 &1805781473

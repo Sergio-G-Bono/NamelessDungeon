@@ -34,12 +34,14 @@ public class Sc_PlayerMovement : MonoBehaviour
     [SerializeField] private float currentSpeed;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
+    [SerializeField] private float dashSpeed;
     [SerializeField] private float walkMovementDistanceFromPlayer = 1f;
     [SerializeField] private float runMovementDistanceFromPlayer = 8f;
     [SerializeField] private float smoothRotValue = .1f;
     [SerializeField] private ST_MovementTresholds moveTreshold;
     private float distanceFromTarget;
     private float analogMagnitude;
+    private bool isDashing=false;
 
     /// <summary>
     /// Input
@@ -54,6 +56,7 @@ public class Sc_PlayerMovement : MonoBehaviour
     /// Animator constant strings
     /// </summary>
     private const string APmovementMagnitude = "APmagnitude";
+    private const string APdashTrigger = "APdashTrigger";
 
     #region MONOBEHAVIOUR METHODS
 
@@ -94,6 +97,11 @@ public class Sc_PlayerMovement : MonoBehaviour
 
         #region OTHER ACTIONS
 
+        inputClass.AM_CharControl.Dash.performed += ctx =>
+        {
+            PerformDash();
+        };
+
         InputSystem.onDeviceChange += (device, change) =>
         {
             DeviceChange(change);
@@ -106,6 +114,7 @@ public class Sc_PlayerMovement : MonoBehaviour
             isPadConnected = true;
         }
     }
+
     private void OnEnable()
     {
         inputClass.Enable();
@@ -209,6 +218,11 @@ public class Sc_PlayerMovement : MonoBehaviour
 
     private void Move()
     {
+        if (isDashing)
+        {
+            cc.SimpleMove(transform.forward * 1 * dashSpeed);
+            return;
+        }
         if (isMousePointing && !isPadConnected)
         {
             if (distanceFromTarget < moveTreshold.mouseMinMov)
@@ -252,6 +266,19 @@ public class Sc_PlayerMovement : MonoBehaviour
             var skewedInput = matrix.MultiplyPoint3x4(currentMovement);
             cc.SimpleMove(skewedInput * 1 * currentSpeed);
         }
+    }
+
+    private void PerformDash()
+    {
+        animator.SetTrigger(APdashTrigger);
+        isDashing = true;
+        StartCoroutine(DashTimer());
+    }
+
+    private IEnumerator DashTimer()
+    {
+        yield return new WaitForSeconds(1f);
+        isDashing = false;
     }
     #endregion
 

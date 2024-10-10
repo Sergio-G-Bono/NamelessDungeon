@@ -186,7 +186,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 37.23
+  field of view: 70.00001
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -211,8 +211,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14879205}
-  m_LocalRotation: {x: 0.107984036, y: -0.8893655, z: 0.26763695, w: 0.35459694}
-  m_LocalPosition: {x: 1.902513, y: 6.03241, z: 1.9819279}
+  m_LocalRotation: {x: 0.26239592, y: -0.36692443, z: 0.108687945, w: 0.885834}
+  m_LocalPosition: {x: 7.1, y: 12.693, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14100,6 +14100,7 @@ MonoBehaviour:
   currentSpeed: 0
   minSpeed: 2
   maxSpeed: 5
+  dashSpeed: 10
   walkMovementDistanceFromPlayer: 1
   runMovementDistanceFromPlayer: 8
   smoothRotValue: 0.1
@@ -15273,6 +15274,7 @@ MonoBehaviour:
   currentSpeed: 0
   minSpeed: 0
   maxSpeed: 0
+  dashSpeed: 0
   walkMovementDistanceFromPlayer: 1
   runMovementDistanceFromPlayer: 8
   smoothRotValue: 0.5

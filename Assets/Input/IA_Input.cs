@@ -53,6 +53,15 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""60786a7e-a4f0-4870-bd51-cab705ede867"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -99,6 +108,50 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
                     ""action"": ""PointMouseMov"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66e2fc76-bfaa-405f-99a6-78e7c56e76fd"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38730dec-5dc8-4357-9f17-b8ff83b5407b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb1bb418-e5e1-426e-86ab-2fa66681ef0e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ccf7feec-19b9-4d76-8c5d-ef0670ac2293"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -110,6 +163,7 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
         m_AM_CharControl_Move = m_AM_CharControl.FindAction("Move", throwIfNotFound: true);
         m_AM_CharControl_Run = m_AM_CharControl.FindAction("Run", throwIfNotFound: true);
         m_AM_CharControl_PointMouseMov = m_AM_CharControl.FindAction("PointMouseMov", throwIfNotFound: true);
+        m_AM_CharControl_Dash = m_AM_CharControl.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -174,6 +228,7 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
     private readonly InputAction m_AM_CharControl_Move;
     private readonly InputAction m_AM_CharControl_Run;
     private readonly InputAction m_AM_CharControl_PointMouseMov;
+    private readonly InputAction m_AM_CharControl_Dash;
     public struct AM_CharControlActions
     {
         private @IA_Input m_Wrapper;
@@ -181,6 +236,7 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_AM_CharControl_Move;
         public InputAction @Run => m_Wrapper.m_AM_CharControl_Run;
         public InputAction @PointMouseMov => m_Wrapper.m_AM_CharControl_PointMouseMov;
+        public InputAction @Dash => m_Wrapper.m_AM_CharControl_Dash;
         public InputActionMap Get() { return m_Wrapper.m_AM_CharControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -199,6 +255,9 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
             @PointMouseMov.started += instance.OnPointMouseMov;
             @PointMouseMov.performed += instance.OnPointMouseMov;
             @PointMouseMov.canceled += instance.OnPointMouseMov;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IAM_CharControlActions instance)
@@ -212,6 +271,9 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
             @PointMouseMov.started -= instance.OnPointMouseMov;
             @PointMouseMov.performed -= instance.OnPointMouseMov;
             @PointMouseMov.canceled -= instance.OnPointMouseMov;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IAM_CharControlActions instance)
@@ -234,5 +296,6 @@ public partial class @IA_Input: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnPointMouseMov(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }
